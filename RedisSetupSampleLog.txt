@@ -1,0 +1,1192 @@
+SRs-MacBook-Air:~ sr$ cd redis-2.8.6/
+SRs-MacBook-Air:redis-2.8.6 sr$ ls
+00-RELEASENOTES	CONTRIBUTING	INSTALL		Makefile	deps		runtest		src		utils
+BUGS		COPYING		MANIFESTO	README		redis.conf	sentinel.conf	tests
+SRs-MacBook-Air:redis-2.8.6 sr$ make
+cd src && make all
+rm -rf redis-server redis-sentinel redis-cli redis-benchmark redis-check-dump redis-check-aof *.o *.gcda *.gcno *.gcov redis.info lcov-html
+(cd ../deps && make distclean)
+(cd hiredis && make clean) > /dev/null || true
+(cd linenoise && make clean) > /dev/null || true
+(cd lua && make clean) > /dev/null || true
+(cd jemalloc && [ -f Makefile ] && make distclean) > /dev/null || true
+(rm -f .make-*)
+(rm -f .make-*)
+echo STD=-std=c99 -pedantic >> .make-settings
+echo WARN=-Wall >> .make-settings
+echo OPT=-O2 >> .make-settings
+echo MALLOC=libc >> .make-settings
+echo CFLAGS= >> .make-settings
+echo LDFLAGS= >> .make-settings
+echo REDIS_CFLAGS= >> .make-settings
+echo REDIS_LDFLAGS= >> .make-settings
+echo PREV_FINAL_CFLAGS=-std=c99 -pedantic -Wall -O2 -g -ggdb   -I../deps/hiredis -I../deps/linenoise -I../deps/lua/src >> .make-settings
+echo PREV_FINAL_LDFLAGS=  -g -ggdb >> .make-settings
+(cd ../deps && make hiredis linenoise lua)
+(cd hiredis && make clean) > /dev/null || true
+(cd linenoise && make clean) > /dev/null || true
+(cd lua && make clean) > /dev/null || true
+(cd jemalloc && [ -f Makefile ] && make distclean) > /dev/null || true
+(rm -f .make-*)
+(echo "" > .make-ldflags)
+(echo "" > .make-cflags)
+MAKE hiredis
+cd hiredis && make static
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  net.c
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  hiredis.c
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  sds.c
+cc -std=c99 -pedantic -c -O3 -fPIC  -Wall -W -Wstrict-prototypes -Wwrite-strings -g -ggdb  async.c
+ar rcs libhiredis.a net.o hiredis.o sds.o async.o
+MAKE linenoise
+cd linenoise && make
+cc  -Wall -Os -g  -c linenoise.c
+MAKE lua
+cd lua/src && make all CFLAGS="-O2 -Wall -DLUA_ANSI " MYLDFLAGS=""
+cc -O2 -Wall -DLUA_ANSI    -c -o lapi.o lapi.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lcode.o lcode.c
+cc -O2 -Wall -DLUA_ANSI    -c -o ldebug.o ldebug.c
+cc -O2 -Wall -DLUA_ANSI    -c -o ldo.o ldo.c
+cc -O2 -Wall -DLUA_ANSI    -c -o ldump.o ldump.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lfunc.o lfunc.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lgc.o lgc.c
+cc -O2 -Wall -DLUA_ANSI    -c -o llex.o llex.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lmem.o lmem.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lobject.o lobject.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lopcodes.o lopcodes.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lparser.o lparser.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lstate.o lstate.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lstring.o lstring.c
+cc -O2 -Wall -DLUA_ANSI    -c -o ltable.o ltable.c
+cc -O2 -Wall -DLUA_ANSI    -c -o ltm.o ltm.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lundump.o lundump.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lvm.o lvm.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lzio.o lzio.c
+cc -O2 -Wall -DLUA_ANSI    -c -o strbuf.o strbuf.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lauxlib.o lauxlib.c
+lauxlib.c:577:61: warning: while loop has empty body [-Wempty-body]
+   while ((c = getc(lf.f)) != EOF && c != LUA_SIGNATURE[0]) ;
+                                                            ^
+lauxlib.c:577:61: note: put the semicolon on a separate line to silence this warning
+1 warning generated.
+cc -O2 -Wall -DLUA_ANSI    -c -o lbaselib.o lbaselib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o ldblib.o ldblib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o liolib.o liolib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lmathlib.o lmathlib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o loslib.o loslib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o ltablib.o ltablib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lstrlib.o lstrlib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o loadlib.o loadlib.c
+cc -O2 -Wall -DLUA_ANSI    -c -o linit.o linit.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lua_cjson.o lua_cjson.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lua_struct.o lua_struct.c
+cc -O2 -Wall -DLUA_ANSI    -c -o lua_cmsgpack.o lua_cmsgpack.c
+ar rcu liblua.a lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o strbuf.o lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o loslib.o ltablib.o lstrlib.o loadlib.o linit.o lua_cjson.o lua_struct.o lua_cmsgpack.o	# DLL needs all object files
+ranlib liblua.a
+cc -O2 -Wall -DLUA_ANSI    -c -o lua.o lua.c
+cc -o lua  lua.o liblua.a -lm 
+cc -O2 -Wall -DLUA_ANSI    -c -o luac.o luac.c
+cc -O2 -Wall -DLUA_ANSI    -c -o print.o print.c
+cc -o luac  luac.o print.o liblua.a -lm 
+    CC adlist.o
+    CC ae.o
+    CC anet.o
+    CC dict.o
+    CC redis.o
+    CC sds.o
+    CC zmalloc.o
+    CC lzf_c.o
+    CC lzf_d.o
+    CC pqsort.o
+    CC zipmap.o
+    CC sha1.o
+    CC ziplist.o
+    CC release.o
+    CC networking.o
+    CC util.o
+    CC object.o
+    CC db.o
+    CC replication.o
+    CC rdb.o
+    CC t_string.o
+    CC t_list.o
+    CC t_set.o
+    CC t_zset.o
+    CC t_hash.o
+    CC config.o
+    CC aof.o
+    CC pubsub.o
+    CC multi.o
+    CC debug.o
+    CC sort.o
+    CC intset.o
+    CC syncio.o
+    CC migrate.o
+    CC endianconv.o
+    CC slowlog.o
+    CC scripting.o
+    CC bio.o
+    CC rio.o
+    CC rand.o
+    CC memtest.o
+    CC crc64.o
+    CC bitops.o
+    CC sentinel.o
+    CC notify.o
+    CC setproctitle.o
+    LINK redis-server
+    INSTALL redis-sentinel
+    CC redis-cli.o
+    LINK redis-cli
+    CC redis-benchmark.o
+    LINK redis-benchmark
+    CC redis-check-dump.o
+    LINK redis-check-dump
+    CC redis-check-aof.o
+    LINK redis-check-aof
+
+Hint: To run 'make test' is a good idea ;)
+
+SRs-MacBook-Air:redis-2.8.6 sr$ make test
+cd src && make test
+Cleanup: may take some time... OK
+Starting test server at port 11111
+[ready]: 3927
+Testing unit/printver
+[ready]: 3926
+Testing unit/auth
+[ready]: 3930
+Testing unit/protocol
+[ready]: 3928
+Testing unit/basic
+[ready]: 3932
+Testing unit/scan
+[ready]: 3929
+Testing unit/type/list
+[ready]: 3931
+Testing unit/type/list-2
+[ready]: 3933
+Testing unit/type/list-3
+[ready]: 3934
+Testing unit/type/set
+[ready]: 3935
+Testing unit/type/zset
+[ready]: 3940
+Testing unit/type/hash
+[ready]: 3938
+Testing unit/sort
+[ready]: 3941
+Testing unit/expire
+[ready]: 3939
+Testing unit/other
+[ready]: 3937
+Testing unit/multi
+[ready]: 3936
+Testing unit/quit
+Testing Redis version 2.8.6 (00000000)
+[ok]: DEL all keys to start with a clean DB
+[ok]: SET and GET an item
+[ok]: SET and GET an empty item
+[ok]: DEL against a single item
+[ok]: Vararg DEL
+[ok]: KEYS with pattern
+[ok]: KEYS to get all keys
+[ok]: DBSIZE
+[ok]: DEL all keys
+[ok]: Handle an empty query
+[ok]: Negative multibulk length
+[ok]: Out of range multibulk length
+[ok]: Wrong multibulk payload header
+[ok]: Negative multibulk payload length
+[ok]: Out of range multibulk payload length
+[ok]: Non-number multibulk payload length
+[ok]: Multi bulk request not followed by bulk arguments
+[ok]: Generic wrong number of args
+[ok]: Unbalanced number of quotes
+[ok]: AUTH fails if there is no password configured server side
+[ok]: Very big payload in GET/SET
+[ok]: QUIT returns OK
+[ok]: SAVE - make sure there are all the types as values
+[ok]: EXPIRE - set timeouts multiple times
+[ok]: HSET/HLEN - Small hash creation
+[ok]: Explicit regression for a list bug
+[ok]: LPUSH, RPUSH, LLENGTH, LINDEX, LPOP - ziplist
+[ok]: Check encoding - ziplist
+[ok]: Pipelined commands after QUIT must not be executed
+[ok]: EXPIRE - It should be still possible to read 'x'
+[ok]: Is the small hash encoded with a ziplist?
+[ok]: LPUSH, RPUSH, LLENGTH, LINDEX, LPOP - regular list
+[ok]: Pipelined commands after QUIT that exceed read buffer size
+[ok]: R/LPOP against empty list
+[ok]: ZSET basic ZADD and score update - ziplist
+[ok]: Variadic RPUSH/LPUSH
+[ok]: ZSET element can't be set to NaN with ZADD - ziplist
+[ok]: DEL a list - ziplist
+[ok]: Ziplist: SORT BY key
+[ok]: ZSET element can't be set to NaN with ZINCRBY
+[ok]: SADD, SCARD, SISMEMBER, SMEMBERS basics - regular set
+[ok]: DEL a list - regular list
+[ok]: Ziplist: SORT BY key with limit
+[ok]: ZINCRBY calls leading to NaN result in error
+[ok]: BLPOP, BRPOP: single existing list - linkedlist
+[ok]: Ziplist: SORT BY hash field
+[ok]: BLPOP, BRPOP: multiple existing lists - linkedlist
+[ok]: BLPOP, BRPOP: second list has an entry - linkedlist
+[ok]: BRPOPLPUSH - linkedlist
+[ok]: ZADD - Variadic version base case
+[ok]: SADD, SCARD, SISMEMBER, SMEMBERS basics - intset
+[ok]: BLPOP, BRPOP: single existing list - ziplist
+[ok]: ZADD - Return value is the number of actually added items
+[ok]: SADD against non set
+[ok]: BLPOP, BRPOP: multiple existing lists - ziplist
+[ok]: SADD a non-integer against an intset
+[1/35 done]: unit/printver (0 seconds)
+Testing unit/aofrw
+[ok]: ZADD - Variadic version does not add nothing on single parsing err
+[ok]: BLPOP, BRPOP: second list has an entry - ziplist
+[ok]: SADD an integer larger than 64 bits
+[ok]: ZADD - Variadic version will raise error on missing arg
+[ok]: BRPOPLPUSH - ziplist
+[ok]: ZINCRBY does not work variadic even if shares ZADD implementation
+[ok]: BLPOP, LPUSH + DEL should not awake blocked client
+[ok]: ZCARD basics - ziplist
+[ok]: MUTLI / EXEC basics
+[ok]: BLPOP, LPUSH + DEL + SET should not awake blocked client
+[ok]: ZREM removes key after last element is removed
+[ok]: BLPOP with same key multiple times should work (issue #801)
+[ok]: MULTI/EXEC is isolated from the point of view of BLPOP
+[ok]: DISCARD
+[ok]: BLPOP with variadic LPUSH
+[ok]: Nested MULTI are not allowed
+[ok]: MULTI where commands alter argc/argv
+[ok]: ZREM variadic version
+[ok]: WATCH inside MULTI is not allowed
+[ok]: Protocol desync regression test #1
+[ok]: ZREM variadic version -- remove elements after key deletion
+[ok]: EXEC fails if there are errors while queueing commands #1
+[ok]: EXEC fails if there are errors while queueing commands #2
+[ok]: If EXEC aborts, the client MULTI state is cleared
+[ok]: EXEC works on WATCHed key not modified
+[ok]: EXEC fail on WATCHed key modified (1 key of 1 watched)
+[ok]: EXEC fail on WATCHed key modified (1 key of 5 watched)
+[ok]: EXEC fail on WATCHed key modified by SORT with STORE even if the result is empty
+[ok]: After successful EXEC key is no longer watched
+[ok]: After failed EXEC key is no longer watched
+[ok]: It is possible to UNWATCH
+[ok]: UNWATCH when there is nothing watched works as expected
+[ok]: ZRANGE basics - ziplist
+[ok]: FLUSHALL is able to touch the watched keys
+[ok]: FLUSHALL does not touch non affected keys
+[ok]: FLUSHDB is able to touch the watched keys
+[ok]: FLUSHDB does not touch non affected keys
+[ok]: WATCH is able to remember the DB a key belongs to
+[ok]: ZREVRANGE basics - ziplist
+[ok]: WATCH will consider touched keys target of EXPIRE
+[ok]: ZRANK/ZREVRANK basics - ziplist
+[ok]: ZRANK - after deletion - ziplist
+[ok]: SCAN basic
+[ok]: ZINCRBY - can create a new sorted set - ziplist
+[ok]: ZINCRBY - increment and decrement - ziplist
+[ok]: ZRANGEBYSCORE/ZREVRANGEBYSCORE/ZCOUNT basics
+[ok]: ZRANGEBYSCORE with WITHSCORES
+[ok]: ZRANGEBYSCORE with LIMIT
+[ok]: ZRANGEBYSCORE with LIMIT and WITHSCORES
+[ok]: ZRANGEBYSCORE with non-value min or max
+[ok]: ZREMRANGEBYSCORE basics
+[ok]: ZREMRANGEBYSCORE with non-value min or max
+[ok]: ZREMRANGEBYRANK basics
+[ok]: ZUNIONSTORE against non-existing key doesn't set destination - ziplist
+[ok]: ZUNIONSTORE with empty set - ziplist
+[ok]: ZUNIONSTORE basics - ziplist
+[ok]: ZUNIONSTORE with weights - ziplist
+[ok]: ZUNIONSTORE with a regular set and weights - ziplist
+[ok]: ZUNIONSTORE with AGGREGATE MIN - ziplist
+[ok]: ZUNIONSTORE with AGGREGATE MAX - ziplist
+[ok]: ZINTERSTORE basics - ziplist
+[ok]: ZINTERSTORE with weights - ziplist
+[ok]: ZINTERSTORE with a regular set and weights - ziplist
+[ok]: ZINTERSTORE with AGGREGATE MIN - ziplist
+[ok]: SADD overflows the maximum allowed integers in an intset
+[ok]: ZINTERSTORE with AGGREGATE MAX - ziplist
+[ok]: ZUNIONSTORE with +inf/-inf scores - ziplist
+[ok]: ZUNIONSTORE with NaN weights ziplist
+[ok]: Variadic SADD
+[ok]: ZINTERSTORE with +inf/-inf scores - ziplist
+[ok]: ZINTERSTORE with NaN weights ziplist
+[ok]: Check encoding - skiplist
+[ok]: ZSET basic ZADD and score update - skiplist
+[ok]: ZSET element can't be set to NaN with ZADD - skiplist
+[ok]: ZSET element can't be set to NaN with ZINCRBY
+[ok]: ZINCRBY calls leading to NaN result in error
+[ok]: SCAN COUNT
+[ok]: ZADD - Variadic version base case
+[ok]: ZADD - Return value is the number of actually added items
+[ok]: ZADD - Variadic version does not add nothing on single parsing err
+[ok]: ZADD - Variadic version will raise error on missing arg
+[ok]: ZINCRBY does not work variadic even if shares ZADD implementation
+[ok]: ZCARD basics - skiplist
+[ok]: ZREM removes key after last element is removed
+[ok]: ZREM variadic version
+[ok]: ZREM variadic version -- remove elements after key deletion
+[ok]: SCAN MATCH
+[ok]: SSCAN with encoding intset
+[ok]: SSCAN with encoding hashtable
+[ok]: HSCAN with encoding ziplist
+[ok]: ZRANGE basics - skiplist
+[ok]: ZREVRANGE basics - skiplist
+[ok]: ZRANK/ZREVRANK basics - skiplist
+[ok]: ZRANK - after deletion - skiplist
+[ok]: ZINCRBY - can create a new sorted set - skiplist
+[ok]: ZINCRBY - increment and decrement - skiplist
+[ok]: ZRANGEBYSCORE/ZREVRANGEBYSCORE/ZCOUNT basics
+[ok]: HSCAN with encoding hashtable
+[ok]: ZSCAN with encoding ziplist
+[ok]: ZRANGEBYSCORE with WITHSCORES
+[ok]: ZRANGEBYSCORE with LIMIT
+[ok]: ZRANGEBYSCORE with LIMIT and WITHSCORES
+[ok]: ZRANGEBYSCORE with non-value min or max
+[ok]: Protocol desync regression test #2
+[ok]: ZREMRANGEBYSCORE basics
+[ok]: ZREMRANGEBYSCORE with non-value min or max
+[ok]: HSET/HLEN - Big hash creation
+[ok]: Is the big hash encoded with a ziplist?
+[ok]: ZREMRANGEBYRANK basics
+[ok]: ZUNIONSTORE against non-existing key doesn't set destination - skiplist
+[ok]: ZUNIONSTORE with empty set - skiplist
+[ok]: ZUNIONSTORE basics - skiplist
+[ok]: ZUNIONSTORE with weights - skiplist
+[ok]: ZUNIONSTORE with a regular set and weights - skiplist
+[ok]: ZUNIONSTORE with AGGREGATE MIN - skiplist
+[ok]: ZUNIONSTORE with AGGREGATE MAX - skiplist
+[ok]: ZINTERSTORE basics - skiplist
+[ok]: ZINTERSTORE with weights - skiplist
+[ok]: ZINTERSTORE with a regular set and weights - skiplist
+[ok]: ZINTERSTORE with AGGREGATE MIN - skiplist
+[ok]: ZINTERSTORE with AGGREGATE MAX - skiplist
+[ok]: ZUNIONSTORE with +inf/-inf scores - skiplist
+[ok]: ZUNIONSTORE with NaN weights skiplist
+[ok]: ZINTERSTORE with +inf/-inf scores - skiplist
+[ok]: ZINTERSTORE with NaN weights skiplist
+[ok]: ZINTERSTORE regression with two sets, intset+hashtable
+[ok]: ZUNIONSTORE regression, should not create NaN in scores
+[ok]: HGET against the small hash
+[ok]: ZINTERSTORE #516 regression, mixed sets and ziplist zsets
+[ok]: ZSCORE - ziplist
+[ok]: ZSCAN with encoding skiplist
+[ok]: Protocol desync regression test #3
+[ok]: ZSCORE after a DEBUG RELOAD - ziplist
+[ok]: SCAN guarantees check under write load
+[ok]: SSCAN with integer encoded object (issue #1345)
+[ok]: SSCAN with PATTERN
+[ok]: HSCAN with PATTERN
+[ok]: ZSCAN with PATTERN
+[ok]: Set encoding after DEBUG RELOAD
+[ok]: SREM basics - regular set
+[ok]: SREM basics - intset
+[ok]: SREM with multiple arguments
+[ok]: SREM variadic version with more args needed to destroy the key
+[ok]: ZSET sorting stresser - ziplist
+[ok]: HGET against the big hash
+[ok]: HGET against non existing key
+[ok]: HSET in update and insert mode
+[ok]: HSETNX target key missing - small hash
+[ok]: HSETNX target key exists - small hash
+[ok]: HSETNX target key missing - big hash
+[ok]: HSETNX target key exists - big hash
+[ok]: HMSET wrong number of args
+[ok]: HMSET - small hash
+[ok]: HMSET - big hash
+[ok]: HMGET against non existing key and fields
+[ok]: HMGET against wrong type
+[ok]: HMGET - small hash
+[ok]: Generated sets must be encoded as hashtable
+[ok]: SINTER with two sets - hashtable
+[ok]: SINTERSTORE with two sets - hashtable
+[ok]: SINTERSTORE with two sets, after a DEBUG RELOAD - hashtable
+[ok]: HMGET - big hash
+[ok]: BRPOPLPUSH with zero timeout should block indefinitely
+[ok]: SUNION with two sets - hashtable
+[ok]: HKEYS - small hash
+[ok]: SUNIONSTORE with two sets - hashtable
+[ok]: SINTER against three sets - hashtable
+[ok]: SINTERSTORE with three sets - hashtable
+[ok]: SUNION with non existing keys - hashtable
+[ok]: SDIFF with two sets - hashtable
+[ok]: SDIFF with three sets - hashtable
+[ok]: SDIFFSTORE with three sets - hashtable
+[ok]: HKEYS - big hash
+[ok]: HVALS - small hash
+[ok]: HVALS - big hash
+[ok]: HGETALL - small hash
+[ok]: HGETALL - big hash
+[ok]: Linked list: SORT BY key
+[ok]: Linked list: SORT BY key with limit
+[ok]: Linked list: SORT BY hash field
+[ok]: HDEL and return value
+[ok]: HDEL - more than a single value
+[ok]: WATCH will not consider touched expired keys
+[ok]: DISCARD should clear the WATCH dirty flag on the client
+[ok]: DISCARD should UNWATCH all the keys
+[ok]: HDEL - hash becomes empty before deleting all specified fields
+[ok]: HEXISTS
+[ok]: Is a ziplist encoded Hash promoted on big payload?
+[ok]: HINCRBY against non existing database key
+[ok]: MULTI / EXEC is propagated correctly (single write command)
+[ok]: Generated sets must be encoded as intset
+[ok]: SINTER with two sets - intset
+[ok]: SINTERSTORE with two sets - intset
+[ok]: SINTERSTORE with two sets, after a DEBUG RELOAD - intset
+[ok]: Turning off AOF kills the background writing child if any
+[ok]: SUNION with two sets - intset
+[ok]: SUNIONSTORE with two sets - intset
+[ok]: SINTER against three sets - intset
+[ok]: SINTERSTORE with three sets - intset
+[ok]: SUNION with non existing keys - intset
+[ok]: SDIFF with two sets - intset
+[ok]: SDIFF with three sets - intset
+[ok]: SDIFFSTORE with three sets - intset
+[ok]: SDIFF with first set empty
+[ok]: SDIFF with same set two times
+[ok]: HINCRBY against non existing hash key
+[ok]: HINCRBY against hash key created by hincrby itself
+[ok]: HINCRBY against hash key originally set with HSET
+[ok]: HINCRBY over 32bit value
+[ok]: HINCRBY over 32bit value with over 32bit increment
+[ok]: HINCRBY fails against hash value with spaces (left)
+[ok]: HINCRBY fails against hash value with spaces (right)
+[ok]: HINCRBY can detect overflows
+[ok]: HINCRBYFLOAT against non existing database key
+[ok]: HINCRBYFLOAT against non existing hash key
+[ok]: HINCRBYFLOAT against hash key created by hincrby itself
+[ok]: HINCRBYFLOAT against hash key originally set with HSET
+[ok]: HINCRBYFLOAT over 32bit value
+[ok]: HINCRBYFLOAT over 32bit value with over 32bit increment
+[ok]: HINCRBYFLOAT fails against hash value with spaces (left)
+[ok]: HINCRBYFLOAT fails against hash value with spaces (right)
+[ok]: Hash ziplist regression test for large keys
+[ok]: MULTI / EXEC is propagated correctly (empty transaction)
+[ok]: Hash fuzzing #1 - 10 fields
+[ok]: MULTI / EXEC is propagated correctly (read-only commands)
+[ok]: Hash fuzzing #2 - 10 fields
+[ok]: MULTI / EXEC is propagated correctly (write command, no effect)
+[ok]: ziplist implementation: value encoding and backlink
+[ok]: BRPOPLPUSH with a client BLPOPing the target list
+[ok]: BRPOPLPUSH with wrong source type
+[ok]: EXPIRE - After 2.1 seconds the key should no longer be here
+[ok]: EXPIRE - write on expire should work
+[ok]: EXPIREAT - Check for EXPIRE alike behavior
+[ok]: SETEX - Set + Expire combo operation. Check for TTL
+[ok]: SETEX - Check value
+[ok]: SETEX - Overwrite old key
+[ok]: FUZZ stresser with data model binary
+[ok]: AOF rewrite of list with ziplist encoding, string data
+[ok]: BRPOPLPUSH with wrong destination type
+[ok]: BRPOPLPUSH maintains order of elements after failure
+[ok]: BRPOPLPUSH with multiple blocked clients
+[ok]: Linked BRPOPLPUSH
+[ok]: Circular BRPOPLPUSH
+[ok]: Self-referential BRPOPLPUSH
+[ok]: BRPOPLPUSH inside a transaction
+[ok]: PUSH resulting from BRPOPLPUSH affect WATCH
+[ok]: BRPOPLPUSH does not affect WATCH while still blocked
+[ok]: SETEX - Wait for the key to expire
+[ok]: SETEX - Wrong time parameter
+[ok]: PERSIST can undo an EXPIRE
+[ok]: PERSIST returns 0 against non existing or non volatile keys
+[ok]: AOF rewrite of list with linkedlist encoding, string data
+[ok]: FUZZ stresser with data model alpha
+[ok]: Very big payload random access
+[ok]: AOF rewrite of list with ziplist encoding, int data
+[ok]: BRPOPLPUSH timeout
+[ok]: BLPOP: with single empty list argument
+[ok]: BLPOP: with negative timeout
+[ok]: BLPOP: with non-integer timeout
+[ok]: EXPIRE pricision is now the millisecond
+[ok]: AOF rewrite of list with linkedlist encoding, int data
+[ok]: FUZZ stresser with data model compr
+[ok]: BLPOP: with zero timeout should block indefinitely
+[ok]: BLPOP: second argument is not a list
+[ok]: LTRIM stress testing - linkedlist
+[ok]: Hash fuzzing #1 - 512 fields
+[ok]: AOF rewrite of set with intset encoding, string data
+[ok]: BGSAVE
+[ok]: SELECT an out of range DB
+[ok]: PEXPIRE/PSETEX/PEXPIREAT can set sub-second expires
+[ok]: TTL returns tiem to live in seconds
+[ok]: PTTL returns time to live in milliseconds
+[ok]: TTL / PTTL return -1 if key has no expire
+[ok]: TTL / PTTL return -2 if key does not exit
+[ok]: BLPOP: timeout
+[ok]: BLPOP: arguments are empty
+[ok]: BRPOP: with single empty list argument
+[ok]: BRPOP: with negative timeout
+[ok]: BRPOP: with non-integer timeout
+[ok]: AOF rewrite of set with hashtable encoding, string data
+[ok]: Redis should actively expire keys incrementally
+[ok]: BRPOP: with zero timeout should block indefinitely
+[ok]: BRPOP: second argument is not a list
+[ok]: Big Linked list: SORT BY key
+[ok]: AOF rewrite of set with intset encoding, int data
+[ok]: ZRANGEBYSCORE fuzzy test, 100 ranges in 128 element sorted set - ziplist
+[ok]: Big Linked list: SORT BY key with limit
+[ok]: ZSETs skiplist implementation backlink consistency test - ziplist
+[ok]: SET 10000 numeric keys and access all them in reverse order
+[ok]: DBSIZE should be 10101 now
+[ok]: INCR against non existing key
+[ok]: INCR against key created by incr itself
+[ok]: INCR against key originally set with SET
+[ok]: INCR over 32bit value
+[ok]: INCRBY over 32bit value with over 32bit increment
+[ok]: INCR fails against key with spaces (left)
+[ok]: INCR fails against key with spaces (right)
+[ok]: INCR fails against key with spaces (both)
+[ok]: INCR fails against a key holding a list
+[ok]: DECRBY over 32bit value with over 32bit increment, negative res
+[ok]: INCRBYFLOAT against non existing key
+[ok]: INCRBYFLOAT against key originally set with SET
+[ok]: INCRBYFLOAT over 32bit value
+[ok]: INCRBYFLOAT over 32bit value with over 32bit increment
+[ok]: INCRBYFLOAT fails against key with spaces (left)
+[ok]: INCRBYFLOAT fails against key with spaces (right)
+[ok]: INCRBYFLOAT fails against key with spaces (both)
+[ok]: INCRBYFLOAT fails against a key holding a list
+[ok]: INCRBYFLOAT does not allow NaN or Infinity
+[ok]: INCRBYFLOAT decrement
+[ok]: SETNX target key missing
+[ok]: SETNX target key exists
+[ok]: SETNX against not-expired volatile key
+[ok]: Redis should lazy expire keys
+[ok]: Hash fuzzing #2 - 512 fields
+[ok]: Big Linked list: SORT BY hash field
+[ok]: Intset: SORT BY key
+[ok]: Intset: SORT BY key with limit
+[ok]: Intset: SORT BY hash field
+[ok]: AOF rewrite of set with hashtable encoding, int data
+[ok]: Check consistency of different data types after a reload
+[ok]: EXPIRE should not resurrect keys (issue #1026)
+[ok]: 5 keys in, 5 keys out
+[ok]: Hash table: SORT BY key
+[ok]: Hash table: SORT BY key with limit
+[ok]: Hash table: SORT BY hash field
+[ok]: BRPOP: timeout
+[ok]: BRPOP: arguments are empty
+[ok]: BLPOP inside a transaction
+[ok]: LPUSHX, RPUSHX - generic
+[ok]: LPUSHX, RPUSHX - linkedlist
+[ok]: LINSERT - linkedlist
+[ok]: LPUSHX, RPUSHX - ziplist
+[ok]: LINSERT - ziplist
+[ok]: LINSERT raise error on bad syntax
+[ok]: LPUSHX, RPUSHX convert from ziplist to list
+[ok]: LINSERT convert from ziplist to list
+[ok]: AOF rewrite of hash with ziplist encoding, string data
+[ok]: LINDEX consistency test - ziplist
+[ok]: Same dataset digest if saving/reloading as AOF?
+[ok]: LINDEX random access - ziplist
+[ok]: Check if list is still ok after a DEBUG RELOAD - ziplist
+[ok]: ZSETs ZRANK augmented skip list stress testing - ziplist
+[ok]: ZSCORE - skiplist
+[ok]: ZSCORE after a DEBUG RELOAD - skiplist
+[ok]: ZSET sorting stresser - skiplist
+[ok]: LINDEX consistency test - linkedlist
+[ok]: EXPIRES after a reload (snapshot + append only file rewrite)
+[ok]: Check for memory leaks (pid 3975)
+[ok]: AOF rewrite of hash with hashtable encoding, string data
+[ok]: LINDEX random access - linkedlist
+[2/35 done]: unit/quit (12 seconds)
+Testing integration/replication
+[ok]: LTRIM stress testing - ziplist
+[ok]: Check if list is still ok after a DEBUG RELOAD - linkedlist
+[ok]: LLEN against non-list value error
+[ok]: LLEN against non existing key
+[ok]: LINDEX against non-list value error
+[ok]: LINDEX against non existing key
+[ok]: LPUSH against non-list value error
+[ok]: RPUSH against non-list value error
+[ok]: RPOPLPUSH base case - linkedlist
+[ok]: RPOPLPUSH with the same list as src and dst - linkedlist
+[ok]: RPOPLPUSH with linkedlist source and existing target linkedlist
+[ok]: RPOPLPUSH with linkedlist source and existing target ziplist
+[ok]: RPOPLPUSH base case - ziplist
+[ok]: RPOPLPUSH with the same list as src and dst - ziplist
+[ok]: RPOPLPUSH with ziplist source and existing target linkedlist
+[ok]: RPOPLPUSH with ziplist source and existing target ziplist
+[ok]: RPOPLPUSH against non existing key
+[ok]: RPOPLPUSH against non list src key
+[ok]: RPOPLPUSH against non list dst key
+[ok]: RPOPLPUSH against non existing src key
+[ok]: Check for memory leaks (pid 3954)
+[ok]: Basic LPOP/RPOP - linkedlist
+[ok]: Basic LPOP/RPOP - ziplist
+[ok]: LPOP/RPOP against non list value
+[3/35 done]: unit/type/list-2 (13 seconds)
+Testing integration/replication-2
+[ok]: Mass RPOP/LPOP - ziplist
+[ok]: Mass RPOP/LPOP - linkedlist
+[ok]: LRANGE basics - linkedlist
+[ok]: LRANGE inverted indexes - linkedlist
+[ok]: LRANGE out of range indexes including the full list - linkedlist
+[ok]: LRANGE out of range negative end index - linkedlist
+[ok]: LRANGE basics - ziplist
+[ok]: LRANGE inverted indexes - ziplist
+[ok]: LRANGE out of range indexes including the full list - ziplist
+[ok]: LRANGE out of range negative end index - ziplist
+[ok]: LRANGE against non existing key
+[ok]: LTRIM basics - linkedlist
+[ok]: LTRIM out of range negative end index - linkedlist
+[ok]: LTRIM basics - ziplist
+[ok]: LTRIM out of range negative end index - ziplist
+[ok]: LSET - linkedlist
+[ok]: LSET out of range index - linkedlist
+[ok]: LSET - ziplist
+[ok]: LSET out of range index - ziplist
+[ok]: LSET against non existing key
+[ok]: LSET against non list value
+[ok]: LREM remove all the occurrences - linkedlist
+[ok]: LREM remove the first occurrence - linkedlist
+[ok]: LREM remove non existing element - linkedlist
+[ok]: LREM starting from tail with negative count - linkedlist
+[ok]: LREM starting from tail with negative count (2) - linkedlist
+[ok]: LREM deleting objects that may be int encoded - linkedlist
+[ok]: LREM remove all the occurrences - ziplist
+[ok]: LREM remove the first occurrence - ziplist
+[ok]: LREM remove non existing element - ziplist
+[ok]: LREM starting from tail with negative count - ziplist
+[ok]: LREM starting from tail with negative count (2) - ziplist
+[ok]: LREM deleting objects that may be int encoded - ziplist
+[ok]: AOF rewrite of hash with ziplist encoding, int data
+[ok]: First server should have role slave after SLAVEOF
+[ok]: BRPOPLPUSH replication, when blocking against empty list
+[ok]: SETNX against expired volatile key
+[ok]: EXISTS
+[ok]: Zero length value in key. SET/GET/EXISTS
+[ok]: Commands pipelining
+[ok]: Non existing command
+[ok]: RENAME basic usage
+[ok]: RENAME source key should no longer exist
+[ok]: RENAME against already existing key
+[ok]: RENAMENX basic usage
+[ok]: RENAMENX against already existing key
+[ok]: RENAMENX against already existing key (2)
+[ok]: RENAME against non existing source key
+[ok]: RENAME where source and dest key is the same
+[ok]: RENAME with volatile key, should move the TTL as well
+[ok]: RENAME with volatile key, should not inherit TTL of target key
+[ok]: Stress test the hash ziplist -> hashtable encoding conversion
+[ok]: Check for memory leaks (pid 3973)
+[4/35 done]: unit/type/hash (14 seconds)
+Testing integration/replication-3
+[ok]: First server should have role slave after SLAVEOF
+[ok]: Regression for bug 593 - chaining BRPOPLPUSH with other blocking cmds
+[ok]: Check for memory leaks (pid 3958)
+[5/35 done]: unit/type/list (14 seconds)
+Testing integration/replication-4
+[ok]: BRPOPLPUSH replication, list exists
+[ok]: AOF rewrite of hash with hashtable encoding, int data
+[ok]: Check for memory leaks (pid 4111)
+[ok]: SDIFF fuzzing
+[ok]: SINTER against non-set should throw error
+[ok]: SUNION against non-set should throw error
+[ok]: SINTER should handle non existing key as empty
+[ok]: SINTER with same integer elements but different encoding
+[ok]: SINTERSTORE against non existing keys should delete dstkey
+[ok]: SUNIONSTORE against non existing keys should delete dstkey
+[ok]: SPOP basics - hashtable
+[ok]: Check for memory leaks (pid 4105)
+[ok]: SRANDMEMBER - hashtable
+[ok]: SPOP basics - intset
+[ok]: SRANDMEMBER - intset
+[ok]: SRANDMEMBER with <count> against non existing key
+[ok]: SRANDMEMBER with <count> - hashtable
+[ok]: First server should have role slave after SLAVEOF
+[ok]: EXPIRES after AOF reload (without rewrite)
+[ok]: SRANDMEMBER with <count> - intset
+[ok]: SMOVE basics - from regular set to intset
+[ok]: Second server should have role master at first
+[ok]: SLAVEOF should start with link status "down"
+[ok]: The role should immediately be changed to "slave"
+[ok]: SMOVE basics - from intset to regular set
+[ok]: SMOVE non existing key
+[ok]: SMOVE non existing src set
+[ok]: SMOVE from regular set to non existing destination set
+[ok]: SMOVE from intset to non existing destination set
+[ok]: SMOVE wrong src key type
+[ok]: SMOVE wrong dst key type
+[ok]: SMOVE with identical source and destination
+[ok]: AOF rewrite of zset with ziplist encoding, string data
+[ok]: First server should have role slave after SLAVEOF
+[ok]: Sync should have transferred keys from master
+[ok]: The link status should be up
+[ok]: SET on the master should immediately propagate
+[ok]: FLUSHALL should replicate
+[ok]: Check for memory leaks (pid 4214)
+[ok]: Check for memory leaks (pid 4207)
+[ok]: AOF rewrite of zset with skiplist encoding, string data
+[ok]: AOF rewrite of zset with ziplist encoding, int data
+[ok]: AOF rewrite of zset with skiplist encoding, int data
+[ok]: BGREWRITEAOF is delayed if BGSAVE is in progress
+[ok]: BGREWRITEAOF is refused if already in progress
+[ok]: Check for memory leaks (pid 3949)
+[ok]: Check for memory leaks (pid 4053)
+[6/35 done]: unit/aofrw (19 seconds)
+Testing integration/replication-psync
+[ok]: AUTH fails when a wrong password is given
+[ok]: Arbitrary command gives an error when AUTH is required
+[ok]: AUTH succeeds when the right password is given
+[ok]: Once AUTH succeeded we can actually send commands to the server
+[ok]: Check for memory leaks (pid 4292)
+[ok]: First server should have role slave after SLAVEOF
+[7/35 done]: unit/auth (20 seconds)
+Testing integration/aof
+[ok]: Unfinished MULTI: Server should have logged an error
+[ok]: Short read: Server should have logged an error
+[ok]: Short read: Utility should confirm the AOF is not valid
+[ok]: Short read: Utility should be able to fix the AOF
+[ok]: ZRANGEBYSCORE fuzzy test, 100 ranges in 100 element sorted set - skiplist
+[ok]: Fixed AOF: Server should have been started
+[ok]: Fixed AOF: Keyspace should contain values that were parsable
+[ok]: ZSETs skiplist implementation backlink consistency test - skiplist
+[ok]: Check for memory leaks (pid 4343)
+[ok]: AOF+SPOP: Server should have been started
+[ok]: AOF+SPOP: Set should have 1 member
+[ok]: Check for memory leaks (pid 4362)
+[ok]: Test replication with parallel clients writing in differnet DBs
+[ok]: AOF+EXPIRE: Server should have been started
+[ok]: AOF+EXPIRE: List should be empty
+[ok]: Check for memory leaks (pid 4186)
+[ok]: Check for memory leaks (pid 4382)
+[ok]: Connect multiple slaves at the same time (issue #141)
+[ok]: Redis should not try to convert DEL into EXPIREAT for EXPIRE -1
+[ok]: Check for memory leaks (pid 4172)
+[ok]: Check for memory leaks (pid 4417)
+[ok]: Check for memory leaks (pid 4261)
+[8/35 done]: integration/aof (2 seconds)
+Testing integration/rdb
+[ok]: RDB encoding loading test
+[ok]: Check for memory leaks (pid 4451)
+[ok]: Big Hash table: SORT BY key
+[ok]: Big Hash table: SORT BY key with limit
+[ok]: Check for memory leaks (pid 4255)
+[ok]: Server started empty with non-existing RDB file
+[ok]: Check for memory leaks (pid 4490)
+[ok]: Server started empty with empty RDB file
+[ok]: Check for memory leaks (pid 4249)
+[ok]: First server should have role slave after SLAVEOF
+[ok]: With min-slaves-to-write (1,3): master should be writable
+[ok]: With min-slaves-to-write (2,3): master should not be writable
+[ok]: Check for memory leaks (pid 4517)
+[ok]: PIPELINING stresser (also a regression for the old epoll bug)
+[ok]: APPEND basics
+[ok]: APPEND basics, integer encoded values
+[ok]: Server should not start if RDB file can't be open
+[ok]: Server should not start if RDB is corrupted
+[9/35 done]: integration/rdb (2 seconds)
+Testing integration/convert-zipmap-hash-on-load
+[ok]: Check for memory leaks (pid 4237)
+[ok]: RDB load zipmap hash: converts to ziplist
+[10/35 done]: integration/replication (12 seconds)
+Testing unit/pubsub
+[ok]: Check for memory leaks (pid 4562)
+[ok]: PUBLISH/SUBSCRIBE basics
+[ok]: PUBLISH/SUBSCRIBE with two clients
+[ok]: PUBLISH/SUBSCRIBE after UNSUBSCRIBE without arguments
+[ok]: SUBSCRIBE to one channel more than once
+[ok]: UNSUBSCRIBE from non-subscribed channels
+[ok]: PUBLISH/PSUBSCRIBE basics
+[ok]: PUBLISH/PSUBSCRIBE with two clients
+[ok]: PUBLISH/PSUBSCRIBE after PUNSUBSCRIBE without arguments
+[ok]: PUNSUBSCRIBE from non-subscribed channels
+[ok]: Mix SUBSCRIBE and PSUBSCRIBE
+[ok]: PUNSUBSCRIBE and UNSUBSCRIBE should always reply
+[ok]: Keyspace notifications: we receive keyspace notifications
+[ok]: Keyspace notifications: we receive keyevent notifications
+[ok]: Keyspace notifications: we can receive both kind of events
+[ok]: Keyspace notifications: we are able to mask events
+[ok]: Keyspace notifications: general events test
+[ok]: Keyspace notifications: list events test
+[ok]: Keyspace notifications: set events test
+[ok]: Keyspace notifications: zset events test
+[ok]: Keyspace notifications: hash events test
+[ok]: Keyspace notifications: expired events (triggered expire)
+[ok]: Keyspace notifications: expired events (background expire)
+[ok]: Keyspace notifications: evicted events
+[ok]: Keyspace notifications: test CONFIG GET/SET of event flags
+[ok]: RDB load zipmap hash: converts to hash table when hash-max-ziplist-entries is exceeded
+[ok]: Big Hash table: SORT BY hash field
+[ok]: Check for memory leaks (pid 4579)
+[ok]: Check for memory leaks (pid 4594)
+[ok]: SORT GET #
+[ok]: SORT GET <const>
+[ok]: Check for memory leaks (pid 3952)
+[11/35 done]: unit/pubsub (1 seconds)
+Testing unit/slowlog
+[ok]: SORT GET (key and hash) with sanity check
+[ok]: SORT BY key STORE
+[ok]: SORT BY hash field STORE
+[ok]: SORT DESC
+[ok]: SORT ALPHA against integer encoded strings
+[ok]: SORT sorted set
+[ok]: SORT sorted set BY nosort should retain ordering
+[ok]: SORT sorted set BY nosort + LIMIT
+[ok]: SORT sorted set BY nosort works as expected from scripts
+[ok]: SORT sorted set: +inf and -inf handling
+[ok]: SORT regression for issue #19, sorting floats
+[ok]: RDB load zipmap hash: converts to hash table when hash-max-ziplist-value is exceeded
+[ok]: SORT with STORE returns zero if result is empty (github isse 224)
+[ok]: SORT with STORE does not create empty lists (github issue 224)
+[ok]: SORT with STORE removes key if result is empty (github issue 227)
+[ok]: SORT with BY <constant> and STORE should still order output
+[ok]: SORT will complain with numerical sorting and bad doubles (1)
+[ok]: SORT will complain with numerical sorting and bad doubles (2)
+[ok]: SORT BY sub-sorts lexicographically if score is the same
+[ok]: SORT GET with pattern ending with just -> does not get hash field
+[ok]: SLOWLOG - check that it starts with an empty log
+[ok]: DEL all keys again (DB 0)
+[ok]: DEL all keys again (DB 1)
+[ok]: MOVE basic usage
+[ok]: MOVE against key existing in the target DB
+[ok]: SET/GET keys in different DBs
+[ok]: MGET
+[ok]: MGET against non existing key
+[ok]: MGET against non-string key
+[ok]: Regression for a crash with blocking ops and pipelining
+[ok]: Check for memory leaks (pid 4617)
+[ok]: ZSETs ZRANK augmented skip list stress testing - skiplist
+[ok]: RANDOMKEY
+[ok]: RANDOMKEY against empty DB
+[ok]: RANDOMKEY regression 1
+[ok]: GETSET (set new value)
+[ok]: GETSET (replace old value)
+[ok]: MSET base case
+[ok]: MSET wrong number of args
+[ok]: MSETNX with already existent key
+[ok]: MSETNX with not existing keys
+[ok]: STRLEN against non-existing key
+[ok]: STRLEN against integer-encoded value
+[ok]: STRLEN against plain string
+[ok]: SETBIT against non-existing key
+[ok]: SETBIT against string-encoded key
+[ok]: SETBIT against integer-encoded key
+[ok]: SETBIT against key with wrong type
+[ok]: SETBIT with out of range bit offset
+[ok]: SETBIT with non-bit argument
+[ok]: SLOWLOG - only logs commands taking more time than specified
+[12/35 done]: integration/convert-zipmap-hash-on-load (1 seconds)
+Testing unit/scripting
+[ok]: Check for memory leaks (pid 4629)
+[ok]: SLOWLOG - max entries is correctly handled
+[ok]: SLOWLOG - GET optional argument to limit output len works
+[ok]: SLOWLOG - RESET subcommand works
+[ok]: SORT speed, 100 element list BY key, 100 times
+[ok]: Check for memory leaks (pid 3961)
+[13/35 done]: unit/type/zset (25 seconds)
+Testing unit/maxmemory
+[14/35 done]: unit/protocol (25 seconds)
+Testing unit/introspection
+[ok]: EVAL - Does Lua interpreter replies to our requests?
+[ok]: EVAL - Lua integer -> Redis protocol type conversion
+[ok]: EVAL - Lua string -> Redis protocol type conversion
+[ok]: EVAL - Lua true boolean -> Redis protocol type conversion
+[ok]: EVAL - Lua false boolean -> Redis protocol type conversion
+[ok]: EVAL - Lua status code reply -> Redis protocol type conversion
+[ok]: EVAL - Lua error reply -> Redis protocol type conversion
+[ok]: EVAL - Lua table -> Redis protocol type conversion
+[ok]: EVAL - Are the KEYS and ARGV arrays populated correctly?
+[ok]: EVAL - is Lua able to call Redis API?
+[ok]: EVALSHA - Can we call a SHA1 if already defined?
+[ok]: EVALSHA - Can we call a SHA1 in uppercase?
+[ok]: EVALSHA - Do we get an error on invalid SHA1?
+[ok]: EVALSHA - Do we get an error on non defined SHA1?
+[ok]: EVAL - Redis integer -> Lua type conversion
+[ok]: EVAL - Redis bulk -> Lua type conversion
+[ok]: EVAL - Redis multi bulk -> Lua type conversion
+[ok]: EVAL - Redis status reply -> Lua type conversion
+[ok]: EVAL - Redis error reply -> Lua type conversion
+[ok]: EVAL - Redis nil bulk reply -> Lua type conversion
+[ok]: EVAL - Is Lua affecting the currently selected DB?
+[ok]: EVAL - Is Lua seleced DB retained?
+[ok]: EVAL - Scripts can't run certain commands
+[ok]: EVAL - Scripts can't run certain commands
+[ok]: EVAL - No arguments to redis.call/pcall is considered an error
+[ok]: EVAL - redis.call variant raises a Lua error on Redis cmd error (1)
+[ok]: EVAL - redis.call variant raises a Lua error on Redis cmd error (1)
+[ok]: EVAL - redis.call variant raises a Lua error on Redis cmd error (1)
+[ok]: SCRIPTING FLUSH - is able to clear the scripts cache?
+[ok]: SCRIPT EXISTS - can detect already defined scripts?
+[ok]: SCRIPT LOAD - is able to register scripts in the scripting cache
+[ok]: In the context of Lua the output of random commands gets ordered
+[ok]: SORT is normally not alpha re-ordered for the scripting engine
+[ok]: SORT BY <constant> output gets ordered for scripting
+[ok]: SORT BY <constant> with GET gets ordered for scripting
+[ok]: redis.sha1hex() implementation
+[ok]: Globals protection reading an undeclared global variable
+[ok]: Globals protection setting an undeclared global*
+[ok]: Test an example script DECR_IF_GT
+[ok]: Scripting engine resets PRNG at every script execution
+[ok]: Scripting engine PRNG can be seeded correctly
+[ok]: SLOWLOG - logged entry sanity check
+[ok]: SLOWLOG - commands with too many arguments are trimmed
+[ok]: SLOWLOG - too long arguments are trimmed
+[ok]: CLIENT LIST
+[ok]: MONITOR can log executed commands
+[ok]: MONITOR can log commands issued by the scripting engine
+[ok]: CLIENT GETNAME should return NIL if name is not assigned
+[ok]: CLIENT LIST shows empty fields for unassigned names
+[ok]: CLIENT SETNAME does not accept spaces
+[ok]: CLIENT SETNAME can assign a name to this connection
+[ok]: CLIENT SETNAME can change the name of an existing connection
+[ok]: After CLIENT SETNAME, connection can still be closed
+[ok]: APPEND fuzzing
+[ok]: SORT speed, 100 element list BY hash field, 100 times
+[ok]: SLOWLOG - EXEC is not logged, just executed commands
+[ok]: SORT speed, 100 element list directly, 100 times
+[ok]: SORT speed, 100 element list BY <const>, 100 times
+[ok]: Check for memory leaks (pid 4679)
+[ok]: intsets implementation stress testing
+[ok]: Check for memory leaks (pid 4626)
+[15/35 done]: unit/introspection (1 seconds)
+Testing unit/limits
+[ok]: Check for memory leaks (pid 3978)
+[ok]: Check for memory leaks (pid 3964)
+[16/35 done]: unit/slowlog (1 seconds)
+Testing unit/obuf-limits
+[17/35 done]: unit/sort (26 seconds)
+Testing unit/dump
+[ok]: FLUSHDB
+[ok]: Perform a final SAVE to leave a clean DB on disk
+[18/35 done]: unit/type/set (26 seconds)
+Testing unit/bitops
+[ok]: Test replication partial resync: ok psync
+[ok]: DUMP / RESTORE are able to serialize / unserialize a simple key
+[ok]: RESTORE can set an arbitrary expire to the materialized key
+[ok]: RESTORE can set an expire that overflows a 32 bit integer
+[ok]: RESTORE returns an error of the key already exists
+[ok]: DUMP of non existing key returns nil
+[ok]: Check for memory leaks (pid 3976)
+[ok]: BITCOUNT returns 0 against non existing key
+[ok]: BITCOUNT against test vector #1
+[ok]: BITCOUNT against test vector #2
+[ok]: BITCOUNT against test vector #3
+[ok]: BITCOUNT against test vector #4
+[ok]: BITCOUNT against test vector #5
+[ok]: Check for memory leaks (pid 4312)
+[19/35 done]: unit/other (26 seconds)
+Testing unit/memefficiency
+[ok]: EVAL does not leak in the Lua stack
+[ok]: MIGRATE is able to migrate a key between two instances
+[ok]: EVAL processes writes from AOF in read-only slaves
+[ok]: Check for memory leaks (pid 4299)
+[ok]: Check for memory leaks (pid 4663)
+[ok]: MIGRATE propagates TTL correctly
+[ok]: Check if maxclients works refusing connections
+[ok]: maxmemory - is the memory limit honoured? (policy allkeys-random)
+[ok]: Check for memory leaks (pid 4721)
+[ok]: First server should have role slave after SLAVEOF
+[20/35 done]: unit/limits (1 seconds)
+[ok]: BITCOUNT fuzzing
+[ok]: BITCOUNT with start, end
+[ok]: BITCOUNT syntax error #1
+[ok]: BITCOUNT regression test for github issue #582
+[ok]: BITOP NOT (empty string)
+[ok]: BITOP NOT (known string)
+[ok]: BITOP where dest and target are the same key
+[ok]: BITOP AND|OR|XOR don't change the string with single input key
+[ok]: BITOP missing key is considered a stream of zero
+[ok]: BITOP shorter keys are zero-padded to the key with max length
+[ok]: Timedout read-only scripts can be killed by SCRIPT KILL
+[ok]: With min-slaves-to-write: master not writable with lagged slave
+[ok]: Check for memory leaks (pid 4463)
+[ok]: Check for memory leaks (pid 4439)
+[ok]: SETBIT fuzzing
+[ok]: GETBIT against non-existing key
+[ok]: GETBIT against string-encoded key
+[ok]: GETBIT against integer-encoded key
+[ok]: SETRANGE against non-existing key
+[ok]: SETRANGE against string-encoded key
+[ok]: SETRANGE against integer-encoded key
+[ok]: SETRANGE against key with wrong type
+[ok]: SETRANGE with out of range offset
+[ok]: GETRANGE against non-existing key
+[ok]: GETRANGE against string value
+[ok]: GETRANGE against integer-encoded value
+[ok]: First server should have role slave after SLAVEOF
+[ok]: maxmemory - is the memory limit honoured? (policy allkeys-lru)
+[ok]: Timedout script link is still usable after Lua returns
+[ok]: Timedout scripts that modified data can't be killed by SCRIPT KILL
+[ok]: SHUTDOWN NOSAVE can kill a timedout script anyway
+[ok]: Before the slave connects we issue two EVAL commands
+[ok]: maxmemory - is the memory limit honoured? (policy volatile-lru)
+[ok]: Connect a slave to the main instance
+[ok]: Now use EVALSHA against the master, with both SHAs
+[ok]: If EVALSHA was replicated as EVAL, 'x' should be '4'
+[ok]: Replication of script multiple pushes to list with BLPOP
+[ok]: EVALSHA replication when first call is readonly
+[ok]: Memory efficiency with values in range 32
+[ok]: Check for memory leaks (pid 4908)
+[ok]: maxmemory - is the memory limit honoured? (policy volatile-random)
+[ok]: Check for memory leaks (pid 3955)
+[ok]: Check for memory leaks (pid 4901)
+[21/35 done]: unit/scan (31 seconds)
+[22/35 done]: unit/scripting (6 seconds)
+[ok]: BITOP and fuzzing
+[ok]: MIGRATE can correctly transfer large values
+[ok]: maxmemory - is the memory limit honoured? (policy volatile-ttl)
+[ok]: MIGRATE can correctly transfer hashes
+[ok]: maxmemory - only allkeys-* should remove non-volatile keys (allkeys-random)
+[ok]: GETRANGE fuzzing
+[ok]: Extended SET can detect syntax errors
+[ok]: Extended SET NX option
+[ok]: Extended SET XX option
+[ok]: Extended SET EX option
+[ok]: Extended SET PX option
+[ok]: Extended SET using multiple options at once
+[ok]: KEYS * two times with long key, Github issue #1208
+[ok]: MIGRATE timeout actually works
+[ok]: Check for memory leaks (pid 4745)
+[ok]: Check for memory leaks (pid 3951)
+[23/35 done]: unit/dump (8 seconds)
+[24/35 done]: unit/basic (34 seconds)
+[ok]: BITOP or fuzzing
+[ok]: Test replication partial resync: no backlog
+[ok]: Check for memory leaks (pid 4846)
+[ok]: Memory efficiency with values in range 64
+[ok]: Check for memory leaks (pid 4824)
+[ok]: First server should have role slave after SLAVEOF
+[ok]: BITOP xor fuzzing
+[ok]: maxmemory - only allkeys-* should remove non-volatile keys (allkeys-lru)
+[ok]: BITOP NOT fuzzing
+[ok]: BITOP with integer encoded source objects
+[ok]: BITOP with non string source key
+[ok]: BITOP with empty string after non empty string (issue #529)
+[ok]: Check for memory leaks (pid 4751)
+[25/35 done]: unit/bitops (9 seconds)
+[ok]: maxmemory - only allkeys-* should remove non-volatile keys (volatile-lru)
+[ok]: Check for memory leaks (pid 3981)
+[26/35 done]: unit/multi (37 seconds)
+[ok]: Memory efficiency with values in range 128
+[ok]: maxmemory - only allkeys-* should remove non-volatile keys (volatile-random)
+[ok]: MASTER and SLAVE consistency with expire
+[ok]: Check for memory leaks (pid 4157)
+[ok]: Check for memory leaks (pid 4151)
+[ok]: maxmemory - only allkeys-* should remove non-volatile keys (volatile-ttl)
+[ok]: First server should have role slave after SLAVEOF
+[ok]: Memory efficiency with values in range 1024
+[ok]: maxmemory - policy volatile-lru should only remove volatile keys.
+[ok]: ziplist implementation: encoding stress testing
+[ok]: Check for memory leaks (pid 3966)
+[27/35 done]: unit/type/list-3 (41 seconds)
+[ok]: maxmemory - policy volatile-random should only remove volatile keys.
+[ok]: Check for memory leaks (pid 3977)
+[28/35 done]: unit/expire (42 seconds)
+[ok]: maxmemory - policy volatile-ttl should only remove volatile keys.
+[ok]: Check for memory leaks (pid 4678)
+[29/35 done]: unit/maxmemory (18 seconds)
+[ok]: Client output buffer hard limit is enforced
+[ok]: MASTER and SLAVE dataset should be identical after complex ops
+[ok]: Test replication partial resync: ok after delay
+[ok]: Check for memory leaks (pid 4135)
+[ok]: Check for memory leaks (pid 5042)
+[ok]: Check for memory leaks (pid 4129)
+[30/35 done]: integration/replication-2 (32 seconds)
+[ok]: Check for memory leaks (pid 5036)
+[ok]: First server should have role slave after SLAVEOF
+[ok]: Memory efficiency with values in range 16384
+[ok]: Check for memory leaks (pid 4782)
+[31/35 done]: unit/memefficiency (21 seconds)
+[ok]: Test replication partial resync: backlog expired
+[ok]: Check for memory leaks (pid 5200)
+[ok]: Check for memory leaks (pid 5194)
+[ok]: Replication: commands with many arguments (issue #1221)
+[32/35 done]: integration/replication-psync (38 seconds)
+[ok]: Check for memory leaks (pid 4894)
+[ok]: Check for memory leaks (pid 4887)
+[33/35 done]: integration/replication-4 (44 seconds)
+[ok]: Client output buffer soft limit is not enforced if time is not overreached
+[ok]: MASTER and SLAVE consistency with EVALSHA replication
+[ok]: Check for memory leaks (pid 5101)
+[34/35 done]: integration/replication-3 (49 seconds)
+[ok]: Client output buffer soft limit is enforced if time is overreached
+[ok]: Check for memory leaks (pid 4733)
+[35/35 done]: unit/obuf-limits (42 seconds)
+
+                   The End
+
+Execution time of different units:
+  0 seconds - unit/printver
+  12 seconds - unit/quit
+  13 seconds - unit/type/list-2
+  14 seconds - unit/type/hash
+  14 seconds - unit/type/list
+  19 seconds - unit/aofrw
+  20 seconds - unit/auth
+  2 seconds - integration/aof
+  2 seconds - integration/rdb
+  12 seconds - integration/replication
+  1 seconds - unit/pubsub
+  1 seconds - integration/convert-zipmap-hash-on-load
+  25 seconds - unit/type/zset
+  25 seconds - unit/protocol
+  1 seconds - unit/introspection
+  1 seconds - unit/slowlog
+  26 seconds - unit/sort
+  26 seconds - unit/type/set
+  26 seconds - unit/other
+  1 seconds - unit/limits
+  31 seconds - unit/scan
+  6 seconds - unit/scripting
+  8 seconds - unit/dump
+  34 seconds - unit/basic
+  9 seconds - unit/bitops
+  37 seconds - unit/multi
+  41 seconds - unit/type/list-3
+  42 seconds - unit/expire
+  18 seconds - unit/maxmemory
+  32 seconds - integration/replication-2
+  21 seconds - unit/memefficiency
+  38 seconds - integration/replication-psync
+  44 seconds - integration/replication-4
+  49 seconds - integration/replication-3
+  42 seconds - unit/obuf-limits
+
+\o/ All tests passed without errors!
+
+Cleanup: may take some time... OK
+
+SRs-MacBook-Air:redis-2.8.6 sr$ sudo mv src/redis-server /usr/bin
+Password:
+SRs-MacBook-Air:redis-2.8.6 sr$ sudo cp src/redis-cli /usr/bin
+SRs-MacBook-Air:redis-2.8.6 sr$ cp /usr/bin/re
+read             rebase           redis-server     refer            renice           resolveLinks     
+readlink         redis-cli        redo_prebinding  reindexdb        reset            rev              
+SRs-MacBook-Air:redis-2.8.6 sr$ cp /usr/bin/redis-server ./src/
+SRs-MacBook-Air:redis-2.8.6 sr$ src/redis-server 
+[5357] 05 Mar 09:24:30.527 # Warning: no config file specified, using the default config. In order to specify a config file use src/redis-server /path/to/redis.conf
+[5357] 05 Mar 09:24:30.529 * Max number of open files set to 10032
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 2.8.6 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in stand alone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 5357
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+[5357] 05 Mar 09:24:30.530 # Server started, Redis version 2.8.6
+[5357] 05 Mar 09:24:30.530 * The server is now ready to accept connections on port 6379
+^Z
+[1]+  Stopped                 src/redis-server
+SRs-MacBook-Air:redis-2.8.6 sr$ bg %1
+[1]+ src/redis-server &
+SRs-MacBook-Air:redis-2.8.6 sr$ src/redis-cli 
+127.0.0.1:6379> SET looks:good "yes"
+OK
+127.0.0.1:6379> INCR steps:completed
+(integer) 1
