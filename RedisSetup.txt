@@ -1,0 +1,29 @@
+  512  git clone https://github.com/antirez/redis.git
+  513  git clone https://github.com/redis/hiredis.git
+
+  516  cd hiredis
+  517  git remote add redis https://github.com/redis/hiredis.git
+  518  git remote add hy https://github.com/hy/hiredis.git
+
+  520  cd ../redis
+  521  git remote add hy https://github.com/hy/redis.git
+  522  git remote add antirez https://github.com/antirez/redis.git
+
+  534  cp ~/Downloads/redis-2.8.6.tar.gz ~/
+  536  gunzip redis-2.8.6.tar.gz 
+  539  tar -xvf redis-2.8.6.tar 
+  541  rm redis-2.8.6.tar 
+  542  cd redis-2.8.6/
+  544  make
+  545  make test
+  546  sudo mv src/redis-server /usr/bin
+  547  sudo cp src/redis-cli /usr/bin
+  548  cp /usr/bin/redis-server ./src/
+  549  src/redis-server 
+
+  551  src/redis-cli 
+  552  mkdir ~/.redis
+  553  touch ~/.redis/redis.conf
+  554  history
+
+
